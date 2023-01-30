@@ -1,0 +1,101 @@
+{% extends "admin/challenges/create.html" %}
+
+{% block header %}
+    <div class="alert alert-secondary" role="alert">
+        题目动态靶机创建
+    </div>
+{% endblock %}
+
+
+{% block value %}
+    <div class="form-group">
+        <label for="value">Docker Image<br>
+            <small class="form-text text-muted">
+                容器镜像,如果在dockerhub上只需要输入镜像名称即可,如果为本地仓库则输入本地仓库镜像地址.
+            </small>
+        </label>
+        <input type="text" class="form-control" name="docker_image" placeholder="Enter docker image name" required>
+    </div>
+    <div class="form-group">
+        <label for="value">题目访问方式<br>
+            <small class="form-text text-muted">
+                题目访问方式,Web题目为http,Pwn题目为direct.
+            </small>
+        </label>
+        <select class="form-control" name="redirect_type">
+            <option value="http" selected>HTTP(Web题目选择)</option>
+             <option value="direct">Direct(Pwn题目选择)</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="value">容器端口<br>
+            <small class="form-text text-muted">
+                选择容器端口,Web默认为80端口,Pwn题自行定义端口
+            </small>
+        </label>
+        <input type="number" class="form-control" name="redirect_port" placeholder="Enter the port you want to open" value="80"
+               required>
+    </div>
+    <div class="form-group">
+        <label for="value">容器内存限制<br>
+            <small class="form-text text-muted">
+                容器内存使用上限
+            </small>
+        </label>
+        <input type="number" class="form-control" name="memory_limit" placeholder="Enter the memory limit" value="128"
+               required>
+    </div>
+    <div class="form-group">
+        <label for="value">容器CPU限制<br>
+            <small class="form-text text-muted">
+                题目使用的CPU上限
+            </small>
+        </label>
+        <input type="number" class="form-control" name="cpu_limit" placeholder="Enter the cpu limit" value="500"
+               required>
+    </div>
+    <div class="form-group">
+        <label for="value">题目初始值<br>
+            <small class="form-text text-muted">
+                题目初始值
+            </small>
+        </label>
+        <input type="number" class="form-control" name="value" placeholder="Enter value" required>
+    </div>
+
+    <div class="form-group">
+        <label for="value">递减上限<br>
+            <small class="form-text text-muted">
+                {#  The amount of solves before the challenge reaches its minimum value#}
+                到最小分数前的允许的解题人数
+            </small>
+        </label>
+        <input type="number" class="form-control" name="decay" placeholder="Enter decay limit" required>
+    </div>
+
+    <div class="form-group">
+        <label for="value">题目分数最小值<br>
+            <small class="form-text text-muted">
+                题目分数的最小值
+            </small>
+        </label>
+        <input type="number" class="form-control" name="minimum" placeholder="Enter minimum value" required>
+    </div>
+
+    <div class="form-group">
+        <label for="value">计分方式<br>
+            <small class="form-text text-muted">
+                选择题目计分方式
+            </small>
+        </label>
+
+        <select class="form-control" name="dynamic_score">
+            <option value="0" selected>静态计分</option>
+            <option value="1">动态计分</option>
+        </select>
+    </div>
+{% endblock %}
+
+{% block type %}
+    <input type="hidden" value="动态题目" name="type" id="chaltype">
+{% endblock %}

@@ -1,0 +1,29 @@
+{% for config, val in {
+    "FrpcApi连接地址": ("FrpApiUrl", "FrpcApi连接地址"),
+    "Pwn题目域名前缀": ("PwnSubDomain", "Pwn题目域名前缀"),
+    "端口最小值": ("PwnMinPort", "映射到VPS上的端口范围(最小值)"),
+    "端口最大值": ("PwnMaxPort", "映射到VPS上的端口范围(最大值)"),
+}.items() %}
+    {% set value = get_config('BerNet:' + val[0]) %}
+    <div class="form-group">
+        <label for="{{ val[0].replace('_', '-') }}">
+            {{ config }}
+            <small class="form-text text-muted">
+                {{ val[1] }}
+            </small>
+        </label>
+        <input type="text" class="form-control" id="{{ val[0].replace('_', '-') }}" name="{{ 'BerNet:' + val[0] }}" {% if
+        value !=None %}value="{{ value }}" {% endif %}>
+    </div>
+{% endfor %}
+{% set frpc_template = get_config("BerNet:FrpcTemplate") %}
+<div class="form-group">
+    <label for="frp-config-template">
+        Frpc模板 [自动获取]
+        <small class="form-text text-muted">
+            自动获取到的Frpc配置文件
+        </small>
+    </label>
+    <textarea class="form-control input-filled-valid" id="frp-config-template" rows="7"
+              name="BerNet:FrpcTemplate">{{ frpc_template }}</textarea>
+</div>

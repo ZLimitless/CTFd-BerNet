@@ -1,0 +1,94 @@
+{% extends "admin/challenges/update.html" %}
+
+{% block value %}
+    <div class="form-group">
+        <label for="value">当前题目分数<br>
+            <small class="form-text text-muted">
+                当前题目分数
+            </small>
+        </label>
+        <input type="number" class="form-control chal-value" name="value" value="{{ challenge.value }}" disabled>
+    </div>
+    <div class="form-group">
+        <label for="value">题目初始值<br>
+            <small class="form-text text-muted">
+                题目初始值
+            </small>
+        </label>
+        <input type="number" class="form-control chal-initial" name="initial" value="{{ challenge.initial }}" required>
+    </div>
+    <div class="form-group">
+        <label for="value">递减上限<br>
+            <small class="form-text text-muted">
+                到最小分数前的允许的解题人数
+            </small>
+        </label>
+        <input type="number" class="form-control chal-decay" name="decay" value="{{ challenge.decay }}" required>
+    </div>
+    <div class="form-group">
+        <label for="value">题目分数最小值<br>
+            <small class="form-text text-muted">
+                题目分数的最小值
+            </small>
+        </label>
+        <input type="number" class="form-control chal-minimum" name="minimum" value="{{ challenge.minimum }}" required>
+    </div>
+    <div class="form-group">
+        <label for="value">Docker Image<br>
+            <small class="form-text text-muted">
+                The docker image used to deploy
+            </small>
+        </label>
+        <input type="text" class="form-control" name="docker_image" placeholder="Enter docker image name"
+               required value="{{ challenge.docker_image }}">
+    </div>
+    <div class="form-group">
+        <label for="value">题目访问方式<br>
+            <small class="form-text text-muted">
+                选择题目访问方式,默认为http
+            </small>
+        </label>
+        <select class="form-control" name="redirect_type">
+            <option value="http" {% if challenge.redirect_type == "http" %}selected{% endif %}>HTTP</option>
+            <option value="direct" {% if challenge.redirect_type == "direct" %}selected{% endif %}>Direct</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="value">容器端口<br>
+            <small class="form-text text-muted">
+                选择容器端口,默认为80
+            </small>
+        </label>
+        <input type="number" class="form-control" name="redirect_port" placeholder="Enter the port you want to open"
+               required value="{{ challenge.redirect_port }}">
+    </div>
+    <div class="form-group">
+        <label for="value">容器内存限制<br>
+            <small class="form-text text-muted">
+                容器内存使用上限
+            </small>
+        </label>
+        <input type="number" class="form-control" name="memory_limit" placeholder="Enter the memory limit"
+               value="{{ challenge.memory_limit }}" required>
+    </div>
+    <div class="form-group">
+        <label for="value">容器CPU限制<br>
+            <small class="form-text text-muted">
+                题目使用的CPU上限
+            </small>
+        </label>
+        <input type="number" class="form-control" name="cpu_limit" placeholder="Enter the cpu limit"
+               value="{{ challenge.cpu_limit }}" required>
+    </div>
+    <div class="form-group">
+        <label for="value">计分方式<br>
+            <small class="form-text text-muted">
+                选择题目计分方式
+            </small>
+        </label>
+        <select class="form-control" name="dynamic_score">
+            <option value="0" {% if challenge.dynamic_score == 0 %}selected{% endif %}>静态计分</option>
+            <option value="1" {% if challenge.dynamic_score == 1 %}selected{% endif %}>动态计分</option>
+        </select>
+    </div>
+{% endblock %}

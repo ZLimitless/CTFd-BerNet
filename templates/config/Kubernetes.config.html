@@ -1,0 +1,93 @@
+<div class="tab-pane fade show active" id="Kubernetes" role="tabpanel" aria-autocomplete="none">
+    <h5>基础配置</h5>
+    <small class="form-text text-muted">
+        容器部署基础配置
+    </small><br>
+    {% for config, val in {
+        "KubernetesAPIURL": ("KubernetesUrl", "KubernetesAPI地址"),
+        "CA证书": ("KubernetesCA", "kubernetes CA证书地址"),
+        "Token": ("KubernetesToken", "Kubernetes管理员用户登录Token"),
+    }.items() %}
+        {% set value = get_config('BerNet:' + val[0]) %}
+        <div class="form-group">
+            <label for="{{ val[0].replace('_', '-') }}">
+                {{ config }}
+                <small class="form-text text-muted">{{ val[1] }}</small>
+            </label>
+            <input type="text" class="form-control"
+                   id="{{ val[0].replace('_', '-') }}" name="{{ 'BerNet:' + val[0] }}"
+                   {% if value != None %}value="{{ value }}"{% endif %}>
+        </div>
+    {% endfor %}
+        {% set UseHttps = get_config('BerNet:UseHttps') %}
+        <div class="form-check">
+            <input type="checkbox" id="DomainUseHttps" name="BerNet:UseHttps"
+                   {% if UseHttps == True %}checked{% endif %}>
+            <label for="DomainUseHttps">Use Https</label>
+        </div>
+        <div class="container" id="DomainSSLConfig">
+            <div class="form-group">
+                <label for="DomainSSLCACert">
+                    SSL Cert
+                    <small class="form-text text-muted">
+                        HTTPS SSL Crt路径
+                    </small>
+                </label>
+                <input type="text" class="form-control"
+                       id="SSLCACert" name="BerNet:SSLCACert"
+                       value="{{ get_config('BerNet:SSLCACert') }}">
+            </div>
+            <div class="form-group">
+                <label for="DomainSSLCAKey">
+                    SSL Key
+                    <small class="form-text text-muted">
+                        HTTPS SSL Key路径
+                    </small>
+                </label>
+                <input type="text" class="form-control"
+                       id="SSLCAKey" name="BerNet:SSLCAKey"
+                       value="{{ get_config('BerNet:SSLCAKey') }}">
+            </div>
+            <div class="form-group">
+                <label for="DomainSecretName">
+                    Kubernetes TLS Secret
+                    <small class="form-text text-muted">
+                        kubernetes tls secret名字,如果不存在则会根据以上证书生成
+                    </small>
+                </label>
+                <input type="text" class="form-control"
+                       id="DomainSecretName" name="BerNet:SecretName"
+                       value="{{ get_config('BerNet:SecretName') }}">
+            </div>
+        </div>
+        <script>
+            (function () {
+                let config = document.getElementById('DomainSSLConfig');
+                let option = document.getElementById('DomainUseHttps');
+                config.hidden = !option.checked;
+                option.onclick = () => (config.hidden = !option.checked) || true;
+            }) ()
+        </script>
+    <hr>
+
+    <h5>其他设置</h5>
+    <small class="form-text text-muted">
+        设置容器隔离空间名字(NameSpace)
+    </small><br>
+        {% set value = get_config('BerNet:NameSpace') %}
+        <div class="form-group">
+            <label for="NameSpace">NameSpace
+                <small class="form-text text-muted">容器部署的命名空间,如果不存在则会自动创建</small>
+            </label>
+            <input type="text" class="form-control"
+                   id="NameSpace" name="BerNet:NameSpace"
+                   {% if value != None %}value="{{ value }}"{% endif %}>
+        </div>
+    <hr>
+
+    <div class="submit-row float-right">
+        <button type="submit" tabindex="0" class="btn btn-md btn-primary btn-outlined">
+            Submit
+        </button>
+    </div>
+</div>

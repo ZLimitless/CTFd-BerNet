@@ -1,0 +1,25 @@
+<div class="tab-pane fade" id="challenges" role="tabpanel">
+    {% for config, val in {
+        "题目域名": ("TemplateHttpSubdomain", "设置题目生成后返回的域名,比如ctfUUID.ctf.xxx.com"),
+        "Flag模板": ("TemplateFlag", "控制flag的模板,比如CDUSEC{UUID}"),
+    }.items() %}
+        {% set value = get_config('BerNet:' + val[0]) %}
+        <div class="form-group">
+            <label for="{{ val[0].replace('_', '-') }}">
+                {{ config }}
+                <small class="form-text text-muted">
+                    {{ val[1] }}
+                </small>
+            </label>
+            <input type="text" class="form-control"
+                   id="{{ val[0].replace('_', '-') }}" name="{{ 'BerNet:' + val[0] }}"
+                   {% if value != None %}value="{{ value }}"{% endif %}>
+        </div>
+    {% endfor %}
+
+    <div class="submit-row float-right">
+        <button type="submit" tabindex="0" class="btn btn-md btn-primary btn-outlined">
+            Submit
+        </button>
+    </div>
+</div>
