@@ -44,10 +44,21 @@ class KubernetesTools:
             kind="Pod",
             metadata=client.V1ObjectMeta(name=PodName,labels={"pod-name":PodName}),
             spec=client.V1PodSpec(
+                automount_service_account_token=False,
+                enable_service_links=False,
                 containers=[client.V1Container(
                     name=PodName,
                     image=ImageName,
-                    env=[client.V1EnvVar(name="FLAG",value=ENVFlag),client.V1EnvVar(name="FLAG-FAKE",value="this-is-fake-flag")],
+                    env=[client.V1EnvVar(name="FLAG",value=ENVFlag),
+                         client.V1EnvVar(name="KUBERNETES_SERVICE_PORT_HTTPS",value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_SERVICE_PORT",value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_PORT_443_TCP_PROTO", value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_PORT_443_TCP", value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_SERVICE_HOST", value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_PORT_443_TCP_ADDR", value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_PORT", value="Nothing_here"),
+                         client.V1EnvVar(name="KUBERNETES_PORT_443_TCP_PORT", value="Nothing_here"),
+                         ],
                     ports=[client.V1ContainerPort(container_port=ContainerPort)],
                     resources=client.V1ResourceRequirements(
                         limits={'memory':str(int(MemoryLimit))+"Mi",'cpu':str(CPULimit)+"m"},
