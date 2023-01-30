@@ -108,7 +108,9 @@ https://ctf.cdusec.com/
 ### Pwn题目
 ![](https://cdn.zlimilz.cn/img/20230130201521.png)
 ![](https://cdn.zlimilz.cn/img/20230130202214.png)
-## 项目参考
-感谢以下赵师傅和Frank师傅维护的ctfd-whale,本插件参考了很大部分ctfd-whale的代码.  
+## 更新记录
+2023-1-31 ~~修复了一个可能存在的安全隐患~~  
+## 项目致谢&参考
+感谢赵师傅和Frank师傅维护的ctfd-whale,本插件参考了很大部分ctfd-whale的代码.  
 [ctfd-whale](https://github.com/glzjin/CTFd-Whale)  
 [Frank师傅维护的ctfd-whale](https://github.com/frankli0324/ctfd-whale)  
