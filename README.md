@@ -1,11 +1,12 @@
 # CTFd-BerNet
 基于kubernetes容器编排的ctfd平台动态题目靶场插件,支持Web题目以及pwn题部署.
 ## 环境说明
-本插件是基于k8s v1.18.0版本开发,为保证兼容性等各种问题,请确保部署的主机上已经安装了Kubernetes集群(版本v1.18.0),相关组件如下:
-1.ingress-nginx
-2.确保default-http-backend正常
-简单来说就是集群环境已经能通过注册ingress快速部署业务上线.
-k8s集群可以全部部署在内网,也可以全部部署在外网.
+本插件是基于k8s v1.18.0版本开发,为保证兼容性等各种问题,请确保部署的主机上已经安装了Kubernetes集群(版本v1.18.0),相关组件如下:  
+1.ingress-nginx  
+2.确保default-http-backend正常  
+简单来说就是集群环境已经能通过注册ingress快速部署业务上线.  
+k8s集群可以全部部署在内网,也可以全部部署在外网.  
+
 ### 内网集群,外网vps
 #### web题目环境
 当集群全部部署在内网时,需要一个公网IP为内网集群提供一个接口,如果是使用云,则直接绑定LoadBalancer即可,如果使用vps映射,请将LoadBalancer的端口映射到vps公网上,确保web题目的动态域名能够通过ingress发布.
@@ -108,6 +109,6 @@ https://ctf.cdusec.com/
 ![](https://cdn.zlimilz.cn/img/20230130201521.png)
 ![](https://cdn.zlimilz.cn/img/20230130202214.png)
 ## 项目参考
-感谢以下赵师傅和Frank师傅维护的ctfd-whale,本插件参考了很大部分ctfd-whale的代码.
-[ctfd-whale](https://github.com/glzjin/CTFd-Whale)
-[Frank师傅维护的ctfd-whale](https://github.com/frankli0324/ctfd-whale)
+感谢以下赵师傅和Frank师傅维护的ctfd-whale,本插件参考了很大部分ctfd-whale的代码.  
+[ctfd-whale](https://github.com/glzjin/CTFd-Whale)  
+[Frank师傅维护的ctfd-whale](https://github.com/frankli0324/ctfd-whale)  
