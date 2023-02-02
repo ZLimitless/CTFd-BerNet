@@ -12,6 +12,7 @@ def SetConfig():
         'FrpApiUrl': 'http://admin:admin@127.0.0.1:7400',
         'PwnSubDomain':'pwn.ctf.cdusec.com',
         'SubDomain': 'ctf.cdusec.com',
+        'HttpSubDomain':'httpctf.cdusec.com',
         'PwnMinPort': '32000',
         'PwnMaxPort': '32100',
         'SubNet':'10.10.10.0/24',

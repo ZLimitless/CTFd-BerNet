@@ -19,12 +19,14 @@ class ControlUtil:
     @staticmethod
     def try_add_container(user_id, challenge_id):
         container = DBContainer.create_container_record(user_id, challenge_id)
-        flag=0
-        containerUrl='NULL'
-        containerIP='NULL'
-        if container.challenge.redirect_type == 'http':
+        # flag=0
+        # containerUrl='NULL'
+        # containerIP='NULL'
+        if container.challenge.redirect_type == 'https' or container.challenge.redirect_type == 'http':
+            SubDomainName=get_config('BerNet:SubDomain')
+            if container.challenge.redirect_type == 'http':SubDomainName=get_config('BerNet:HttpSubDomain')
             try:
-                flag,containerUrl=ControlUtil.K8sAPI.CreateContainerThreeInOne(NameSpace=get_config('BerNet:NameSpace'),PodName=container.uuid,ContainerPort=container.challenge.redirect_port,ENVFlag=container.flag,WebPort=80,ImageName=container.challenge.docker_image,SubDomainName=get_config('BerNet:SubDomain'),SecretName=get_config('BerNet:SecretName'),MemoryLimit=container.challenge.memory_limit,CPULimit=container.challenge.cpu_limit)
+                flag,containerUrl=ControlUtil.K8sAPI.CreateContainerThreeInOne(NameSpace=get_config('BerNet:NameSpace'),PodName=container.uuid,ContainerPort=container.challenge.redirect_port,ENVFlag=container.flag,WebPort=80,ImageName=container.challenge.docker_image,SubDomainName=SubDomainName,SecretName=get_config('BerNet:SecretName'),MemoryLimit=container.challenge.memory_limit,CPULimit=container.challenge.cpu_limit,Type=container.challenge.redirect_type)
                 print(containerUrl)
             except Exception as e:
                 DBContainer.remove_container_record(user_id)
@@ -44,7 +46,7 @@ class ControlUtil:
                     return False, f'题目创建并删除失败.'
                 DBContainer.remove_container_record(user_id)
                 return False, f'题目创建失败'
-            container.url=container.uuid + '.' + get_config('BerNet:SubDomain')
+            container.url=containerUrl
             db.session.commit()
             return True, '题目环境创建成功'
         if container.challenge.redirect_type == 'direct':

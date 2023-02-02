@@ -172,33 +172,56 @@ class KubernetesTools:
     def GetIngress(self,NameSpace):
         ret=self.NetworkingV1Api.list_namespaced_ingress(namespace=NameSpace)
         return ret
-    def CreateIngress(self,NameSpace,IngressName,ServiceName,PodName,ServicePort,SubDomainName,SecretName):
-        IngressURL=PodName+"."+SubDomainName
-        body=client.ExtensionsV1beta1Ingress(
-            api_version="networking.k8s.io/v1beta1",#"extensions/v1beta1",
-            kind="Ingress",
-            metadata=client.V1ObjectMeta(
-                name=IngressName
-            ),
-            spec=client.ExtensionsV1beta1IngressSpec(
-                tls=[client.ExtensionsV1beta1IngressTLS(
-                    hosts=[PodName+"."+SubDomainName],
-                    secret_name=SecretName
-                )],
-                rules=[client.ExtensionsV1beta1IngressRule(
-                    host=PodName+"."+SubDomainName,
-                    http=client.ExtensionsV1beta1HTTPIngressRuleValue(
-                        paths=[client.ExtensionsV1beta1HTTPIngressPath(
-                            path="/",
-                            backend=client.ExtensionsV1beta1IngressBackend(
-                                service_name=ServiceName,
-                                service_port=ServicePort
-                            )
-                        )]
-                    )
-                )]
+    def CreateIngress(self,NameSpace,IngressName,ServiceName,PodName,ServicePort,SubDomainName,SecretName,Type='https'):
+        IngressURL = PodName + "." + SubDomainName
+        if Type =='https':
+            body=client.ExtensionsV1beta1Ingress(
+                api_version="networking.k8s.io/v1beta1",#"extensions/v1beta1",
+                kind="Ingress",
+                metadata=client.V1ObjectMeta(
+                    name=IngressName
+                ),
+                spec=client.ExtensionsV1beta1IngressSpec(
+                    tls=[client.ExtensionsV1beta1IngressTLS(
+                        hosts=[PodName+"."+SubDomainName],
+                        secret_name=SecretName
+                    )],
+                    rules=[client.ExtensionsV1beta1IngressRule(
+                        host=IngressURL,
+                        http=client.ExtensionsV1beta1HTTPIngressRuleValue(
+                            paths=[client.ExtensionsV1beta1HTTPIngressPath(
+                                path="/",
+                                backend=client.ExtensionsV1beta1IngressBackend(
+                                    service_name=ServiceName,
+                                    service_port=ServicePort
+                                )
+                            )]
+                        )
+                    )]
+                )
             )
-        )
+        elif Type =='http':
+            body=client.ExtensionsV1beta1Ingress(
+                api_version="networking.k8s.io/v1beta1",#"extensions/v1beta1",
+                kind="Ingress",
+                metadata=client.V1ObjectMeta(
+                    name=IngressName
+                ),
+                spec=client.ExtensionsV1beta1IngressSpec(
+                    rules=[client.ExtensionsV1beta1IngressRule(
+                        host=IngressURL,
+                        http=client.ExtensionsV1beta1HTTPIngressRuleValue(
+                            paths=[client.ExtensionsV1beta1HTTPIngressPath(
+                                path="/",
+                                backend=client.ExtensionsV1beta1IngressBackend(
+                                    service_name=ServiceName,
+                                    service_port=ServicePort
+                                )
+                            )]
+                        )
+                    )]
+                )
+            )
         try:
             self.NetworkingV1Api.create_namespaced_ingress(namespace=NameSpace,body=body)
         except Exception as e:
@@ -226,7 +249,7 @@ class KubernetesTools:
                 print("格式错误")
                 return False
         return True
-    def CreateContainerThreeInOne(self,NameSpace,PodName,ContainerPort,WebPort,ENVFlag,ImageName,SubDomainName,SecretName,MemoryLimit,CPULimit):
+    def CreateContainerThreeInOne(self,NameSpace,PodName,ContainerPort,WebPort,ENVFlag,ImageName,SubDomainName,SecretName,MemoryLimit,CPULimit,Type):
         print("开始创建ingress")
         ContainerURl=""
         flag=0
@@ -243,7 +266,7 @@ class KubernetesTools:
                     flag=1
                 elif self.CheckService(NameSpace,PodName):flag=2
             if 2<=flag<3:
-                ContainerURl = self.CreateIngress(NameSpace=NameSpace, IngressName=PodName, ServiceName=PodName,PodName=PodName, ServicePort=WebPort,SubDomainName=SubDomainName,SecretName=SecretName)
+                ContainerURl = self.CreateIngress(NameSpace=NameSpace, IngressName=PodName, ServiceName=PodName,PodName=PodName, ServicePort=WebPort,SubDomainName=SubDomainName,SecretName=SecretName,Type=Type)
                 if SubDomainName not in ContainerURl:flag=2
                 elif self.CheckIngress(NameSpace,PodName):flag=3
             if i==8:

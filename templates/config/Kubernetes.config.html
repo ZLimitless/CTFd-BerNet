@@ -83,6 +83,24 @@
                    id="NameSpace" name="BerNet:NameSpace"
                    {% if value != None %}value="{{ value }}"{% endif %}>
         </div>
+        {% set value1 = get_config('BerNet:SubDomain') %}
+        <div class="form-group">
+            <label for="SubDomain">HTTPS-SubDomain
+                <small class="form-text text-muted">HTTPS题目类型的链接</small>
+            </label>
+        <input type="text" class="form-control"
+               id="SubDomain" name="BerNet:SubDomain"
+               {% if value1 != None %}value="{{ value1 }}"{% endif %}>
+        </div>
+        {% set value2 = get_config('BerNet:HttpSubDomain') %}
+        <div class="form-group">
+            <label for="HttpSubDomain">HTTP-SubDomain
+                <small class="form-text text-muted">HTTP题目类型的链接</small>
+            </label>
+        <input type="text" class="form-control"
+               id="HttpSubDomain" name="BerNet:HttpSubDomain"
+               {% if value2 != None %}value="{{ value2 }}"{% endif %}>
+        </div>
     <hr>
 
     <div class="submit-row float-right">
