@@ -83,6 +83,15 @@
                    id="NameSpace" name="BerNet:NameSpace"
                    {% if value != None %}value="{{ value }}"{% endif %}>
         </div>
+        {% set value0 = get_config('BerNet:VPSIP') %}
+        <div class="form-group">
+            <label for="VPSIP">公网IP
+                <small class="form-text text-muted">Frps服务器IP,主要用于pwn题转发</small>
+            </label>
+        <input type="text" class="form-control"
+               id="VPSIP" name="BerNet:VPSIP"
+               {% if value0 != None %}value="{{ value0 }}"{% endif %}>
+        </div>
         {% set value1 = get_config('BerNet:SubDomain') %}
         <div class="form-group">
             <label for="SubDomain">HTTPS-SubDomain

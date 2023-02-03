@@ -11,6 +11,7 @@ def SetConfig():
         'MaxPodLivingTime': '3600',
         'FrpApiUrl': 'http://admin:admin@127.0.0.1:7400',
         'PwnSubDomain':'pwn.ctf.cdusec.com',
+        'VPSIP':'162.14.72.168',
         'SubDomain': 'ctf.cdusec.com',
         'HttpSubDomain':'httpctf.cdusec.com',
         'PwnMinPort': '32000',

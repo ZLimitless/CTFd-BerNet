@@ -1,6 +1,7 @@
 {% for config, val in {
     "FrpcApi连接地址": ("FrpApiUrl", "FrpcApi连接地址"),
     "Pwn题目域名前缀": ("PwnSubDomain", "Pwn题目域名前缀"),
+    "HTTP题目域名前缀":("HttpSubDomain","HTTP题目域名前缀,与Kubernetes配置界面相同,frps的subdomain_host配置与此相同"),
     "端口最小值": ("PwnMinPort", "映射到VPS上的端口范围(最小值)"),
     "端口最大值": ("PwnMaxPort", "映射到VPS上的端口范围(最大值)"),
 }.items() %}

@@ -110,7 +110,8 @@ https://ctf.cdusec.com/
 ![](https://cdn.zlimilz.cn/img/20230130202214.png)
 ## 更新记录
 2023-1-31 ~~修复了一个可能存在的安全隐患~~  
-2023-2-2 ~~修复了一个bug~~,新增了添加题目http的功能
+2023-2-2 ~~修复了一个bug~~,**新增了添加题目http的功能**
+2023-2-3 **新增了两个题目新的访问方式(HTTP:Port和IP:Port模式)**
 ## 项目致谢&参考
 感谢赵师傅和Frank师傅维护的ctfd-whale,本插件参考了很大部分ctfd-whale的代码.  
 [ctfd-whale](https://github.com/glzjin/CTFd-Whale)  

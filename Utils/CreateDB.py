@@ -49,10 +49,15 @@ class ControlUtil:
             container.url=containerUrl
             db.session.commit()
             return True, '题目环境创建成功'
-        if container.challenge.redirect_type == 'direct':
+        if container.challenge.redirect_type == 'direct' or container.challenge.redirect_type =='frphttp' or container.challenge.redirect_type == 'frpIP':
             TempPort = ControlUtil.FrpApi.PortGet()
             container.port = TempPort
-            container.url= 'nc ' + get_config('BerNet:PwnSubDomain') + " "+ str(container.port)
+            if container.challenge.redirect_type=='direct':
+                container.url = 'nc ' + get_config('BerNet:PwnSubDomain') + " " + str(container.port)
+            elif container.challenge.redirect_type=='frpIP':
+                container.url=get_config('BerNet:VPSIP')+':'+str(container.port)
+            elif container.challenge.redirect_type == 'frphttp':
+                container.url=container.uuid+'.'+get_config('BerNet:HttpSubDomain')+':'+str(container.port)
             db.session.commit()
             flag,containerIP=ControlUtil.K8sAPI.CreatePwnContainer(NameSpace=get_config('BerNet:NameSpace'),PodName=container.uuid,ContainerPort=container.challenge.redirect_port,EnvFlag=container.flag,VPSPort=TempPort,ImageName=container.challenge.docker_image,MemoryLimit=container.challenge.memory_limit,CPULimit=container.challenge.cpu_limit)
             print(containerIP)
@@ -61,17 +66,21 @@ class ControlUtil:
                 ControlUtil.FrpApi.PortBack(TempPort)
                 return False, '题目容器创建失败'
             if '.' in containerIP:
-                if ControlUtil.FrpApi.PortAdd(PodName=container.uuid, IP=containerIP,Port=TempPort, RemotePort=TempPort):
-                    print("端口映射成功")
-                    return True, '题目环境创建成功'
+                if container.challenge.redirect_type == 'frphttp':
+                    if ControlUtil.FrpApi.PortAdd(PodName=container.uuid, IP=containerIP, Port=TempPort,RemotePort=TempPort,HTTP=True):
+                        print("域名映射成功")
+                        return True, '题目环境创建成功'
                 else:
-                    try:
-                        ControlUtil.K8sAPI.DeleteContainerThreeInOne(NameSpace=get_config('BerNet:NameSpace'),PodName=container.uuid)
-                    except:
-                        return False,f'题目记录创建失败,容器删除失败'
-                    DBContainer.remove_container_record(user_id)
-                    ControlUtil.FrpApi.PortBack(TempPort)
-                    return False, f'题目创建失败'
+                    if ControlUtil.FrpApi.PortAdd(PodName=container.uuid, IP=containerIP,Port=TempPort, RemotePort=TempPort):
+                        print("端口映射成功")
+                        return True, '题目环境创建成功'
+                try:
+                    ControlUtil.K8sAPI.DeleteContainerThreeInOne(NameSpace=get_config('BerNet:NameSpace'),PodName=container.uuid)
+                except:
+                    return False,f'题目记录创建失败,容器删除失败'
+                DBContainer.remove_container_record(user_id)
+                ControlUtil.FrpApi.PortBack(TempPort)
+                return False, f'题目创建失败'
             return True, '题目环境创建成功'
 
     @staticmethod
@@ -83,8 +92,8 @@ class ControlUtil:
             try:
                 ok=ControlUtil.K8sAPI.DeleteContainerThreeInOne(get_config('BerNet:NameSpace'),container.uuid)
                 if not ok:return False
-                if container.challenge.redirect_type== 'direct':
-                    ok=ControlUtil.FrpApi.PortDelete(container.uuid)
+                if container.challenge.redirect_type== 'direct' or container.challenge.redirect_type=='frpIP' or container.challenge.redirect_type=='frphttp':
+                    ok=ControlUtil.FrpApi.PortDelete(container.uuid,container.port)
                 if not ok: return False
                 DBContainer.remove_container_record(user_id)
                 return True, '题目容器已经销毁'

@@ -36,7 +36,7 @@ class FrpcApi:
             self.config = config
         def __str__(self) -> str:
             return f'[{self.name}]\n' + '\n'.join(f'{k} = {v}' for k, v in self.config.items())
-    def PortAdd(self,PodName,IP,Port,RemotePort):
+    def PortAdd(self,PodName,IP,Port,RemotePort,HTTP=False):
         Rules=[]
         config=self.ConfigGet()
         Config={
@@ -45,6 +45,15 @@ class FrpcApi:
             'remote_port':RemotePort,
             'use_compression': 'true',
         }
+        if HTTP:
+            Config={
+                'type':'tcp',
+                'local_ip':IP,
+                'local_port':Port,
+                'remote_port': RemotePort,
+                'subdomain':PodName,
+                'use_compression': 'true',
+            }
         Rules.append(self.FrpRule(PodName,Config))
         try:
             if str(Port) not in config:
@@ -60,15 +69,14 @@ class FrpcApi:
             print("添加配置失败!")
             return False
         print(self.ConfigGet())
-    # def PortDelete(self,Podname):
-    def PortDelete(self,PodName):
+    def PortDelete(self,PodName,UsePort):
         Rules = []
         ConfigNew=""
         ConfigText=self.ConfigGet()
         config=ConfigParser()
         config.read_string(ConfigText)
+        config_dict=None
         try:
-            OldPort=config.get(PodName,"remote_port")
             config.remove_section(PodName) # 删除映射
             config_dict = {sect: dict(config.items(sect)) for sect in config.sections()}
         except:
@@ -80,7 +88,8 @@ class FrpcApi:
             if self.sessions.put(url=self.Url+'/api/config',data=ConfigNew,timeout=5).status_code==200:
                 pass
             if self.sessions.get(url=self.Url+'/api/reload',timeout=2).status_code==200:
-                self.PortManager.AddPort(int(OldPort))
+                self.PortManager.AddPort(int(UsePort))
+                print("端口还成功")
                 print("删除映射成功")
                 return True
         except:
